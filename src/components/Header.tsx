@@ -1,17 +1,25 @@
+import { getAuth, signOut } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
-import { useAuth } from '../hooks/useAuth';
 import { useAppDispatch } from '../store/store';
 import { removeUser } from '../store/slices/userSlice';
+import { useUser } from '../hooks/useUser';
 
 function Header() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const user = useAuth();
+  const user = useUser();
+  const auth = getAuth();
 
   const logOut = () => {
-    dispatch(removeUser());
-    navigate('/signUp');
+    signOut(auth)
+      .then(() => {
+        dispatch(removeUser());
+        navigate('/signUp');
+      })
+      .catch((error): void => {
+        console.log(error);
+      });
   };
 
   return (
@@ -33,9 +41,9 @@ function Header() {
         </Button>
       </Box>
       <Box>
-        {user.isAuth ? (
+        {user.email ? (
           <Button onClick={logOut}>
-            <Link to='/'>Log out</Link>
+            <Link to='/'>Log out from {user.email}</Link>
           </Button>
         ) : (
           <>

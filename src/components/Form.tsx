@@ -5,23 +5,27 @@ import { useNavigate } from 'react-router-dom';
 interface FormProps {
   title: string;
   handleSubmit: (
-    email: string,
-    password: string,
+    creddentials: {
+      email: string;
+      password: string;
+    },
     event: React.SyntheticEvent,
   ) => void;
 }
 
 function Form({ title, handleSubmit }: FormProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [inputCredentials, setInputCredentials] = useState({
+    email: '',
+    password: '',
+  });
+
   const navigate = useNavigate();
 
-  const emailHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const passwordHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
+  const formHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputCredentials({
+      ...inputCredentials,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const closeFormHandler = () => {
@@ -31,7 +35,7 @@ function Form({ title, handleSubmit }: FormProps) {
   return (
     <Stack
       component='form'
-      onSubmit={(event) => handleSubmit(email, password, event)}
+      onSubmit={(event) => handleSubmit(inputCredentials, event)}
       sx={{
         position: 'absolute',
         top: '50%',
@@ -55,15 +59,17 @@ function Form({ title, handleSubmit }: FormProps) {
         fullWidth
         placeholder='Username'
         variant='standard'
-        value={email}
-        onChange={emailHandler}
+        value={inputCredentials.email}
+        onChange={formHandler}
+        name='email'
       />
       <TextField
         fullWidth
         placeholder='Password'
         variant='standard'
-        value={password}
-        onChange={passwordHandler}
+        value={inputCredentials.password}
+        onChange={formHandler}
+        name='password'
       />
       <Button
         type='submit'

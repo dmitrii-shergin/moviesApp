@@ -30,10 +30,10 @@ module.exports = {
         tsx: 'never',
       },
     ],
-    //
     'max-len': ['warn', { code: 80 }],
     'import/prefer-default-export': ['off'],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'no-console': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
   },
 };
